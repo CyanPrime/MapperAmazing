@@ -19,7 +19,9 @@ import javax.swing.JPanel;
 public class TilePanel extends JPanel implements MouseListener{
 	private MasterFrame parent;
 	ImageIcon[] imgs;
-	ImageIcon cursor;
+	ImageIcon[] cursor;
+	private int[] tileSizeToCursor = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 0,
+									     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1};
 	private int tileSize = 32;
 	private int tileLineWidth = 8;
 	private int tileChoice = -1;
@@ -31,7 +33,7 @@ public class TilePanel extends JPanel implements MouseListener{
 		this.parent = parent;
 		imgs = new ImageIcon[0];
 		addMouseListener(this);
-		cursor = new ImageIcon("cursor.png");
+		cursor = new ImageIcon[] {new ImageIcon("imgs/cursor/cursor16.png"), new ImageIcon("imgs/cursor/cursor32.png")};
 	}
 	
 	@Override
@@ -59,7 +61,7 @@ public class TilePanel extends JPanel implements MouseListener{
         	}
         }
         
-        if(mouseTileX <= 9) cursor.paintIcon(this, g, mouseTileX * tileSize,  mouseTileY * tileSize);
+        if(mouseTileX <= 9) cursor[tileSizeToCursor[tileSize]].paintIcon(this, g, mouseTileX * tileSize,  mouseTileY * tileSize);
       //  g.setColor(Color.BLACK);
       //  g.drawString("choice: " + tileChoice, 10, 200);
     }
