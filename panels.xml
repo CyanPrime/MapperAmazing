@@ -1,0 +1,24 @@
+<panels>
+	<panel>
+		<name>Test 1</name>
+		<component>
+			<name>TestComponant</name>
+			<type>0</type>
+		</component>
+	</panel>
+	<panel>
+		<name>Test 2</name>
+		<component>
+			<name>TestComponant2</name>
+			<type>1</type>
+		</component>
+		<component>
+			<name>TestComponant</name>
+			<type>0</type>
+		</component>
+		<component>
+			<name>TestComponant</name>
+			<type>0</type>
+		</component>
+	</panel>
+</panels>
