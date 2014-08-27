@@ -357,7 +357,7 @@ public class MasterFrame extends JFrame{
 				int layers = y.readInt();
 				
 				System.out.println("width: " + width + " height: " + height + " layers: " + layers);
-				//TODO: dp.changNumLayers()
+				dp.changeNumLayers(layers);
 				dp.changeMapSize(width, height);
 				
 				for(int k = 0; k < dp.getMapLayers(); k++){

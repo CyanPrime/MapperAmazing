@@ -158,7 +158,7 @@ public class DrawPanel extends JPanel /*implements MouseListener, MouseMotionLis
 		
 			for(int k = 0; k < aLayerNum; k++){
 				for(int i = 0; i < tileID[0].length; i++){
-					tileID[k][i] = Arrays.copyOf(temp[k][i], tileID[0].length);
+					tileID[k][i] = Arrays.copyOf(temp[k][i], tileID[0][0].length);
 				}
 			}
 	
