@@ -52,6 +52,14 @@ public class MasterFrame extends JFrame{
 	JButton brushBtn = new JButton("brush/fill");
 	//JButton compBtn = new JButton("Load Frame");
 	JLabel brushLabel = new JLabel("Brush Mode");
+	
+	JButton addLayerBtn = new JButton("Add Layer");
+	JButton subLayerBtn = new JButton("Sub Layer");
+	JButton upLayerBtn = new JButton("Layer++");
+	JButton downLayerBtn = new JButton("Layer--");
+	JLabel layerLabel = new JLabel("Number of Layers: " + 1);
+	JLabel curLayerLabel = new JLabel("Current Layer: " + 1);
+	
 	JScrollPane jsp = new JScrollPane(dp, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 	
 	public int activeBrush = -1;
@@ -193,8 +201,44 @@ public class MasterFrame extends JFrame{
 		    }
 		});
 		
-		brushLabel.setBounds(150, 40, 100, 20);
+		brushLabel.setBounds(120, 40, 100, 20);
 		
+		addLayerBtn.setBounds(200, 40, 100, 20);
+		addLayerBtn.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				addLayerToMap();
+		    }
+		});
+		
+		subLayerBtn.setBounds(310, 40, 100, 20);
+		subLayerBtn.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				subLayerFromMap();
+		    }
+		});
+		
+		
+		layerLabel.setBounds(430, 40, 150, 20);
+		
+		upLayerBtn.setBounds(550, 40, 100, 20);
+		upLayerBtn.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				incrementCurrentLayer();
+		    }
+		});
+		
+		downLayerBtn.setBounds(660, 40, 100, 20);
+		downLayerBtn.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				decrementCurrentLayer();
+		    }
+		});
+		
+		curLayerLabel.setBounds(770, 40, 150, 20);
 		/*compBtn.setBounds(800, 40, 150, 20);
 		compBtn.addActionListener(new ActionListener(){
 			@Override
@@ -220,8 +264,15 @@ public class MasterFrame extends JFrame{
 		content.add(undoBtn);
 		content.add(redoBtn);
 		content.add(brushBtn);
+		content.add(addLayerBtn);
+		content.add(subLayerBtn);
+		content.add(upLayerBtn);
+		content.add(downLayerBtn);
+		
 		//content.add(compBtn);
 		content.add(brushLabel);
+		content.add(layerLabel);
+		content.add(curLayerLabel);
 		
 		loadPanel();
 	}
@@ -229,6 +280,27 @@ public class MasterFrame extends JFrame{
 	public Container getContent(){
 		return content;
 	}
+	
+	public void incrementCurrentLayer(){
+		if(dp.getCurrentLayer() + 1 <= dp.getMapLayers()) dp.setCurrentLayer(dp.getCurrentLayer() + 1);
+		curLayerLabel.setText("Current Layer: " + dp.getCurrentLayer());
+	}
+	
+	public void decrementCurrentLayer(){
+		if(dp.getCurrentLayer() - 1 >= 1) dp.setCurrentLayer(dp.getCurrentLayer() - 1);
+		curLayerLabel.setText("Current Layer: " + dp.getCurrentLayer());
+	}
+	
+	public void addLayerToMap(){
+		dp.changeNumLayers(dp.getMapLayers() + 1);
+		layerLabel.setText("Number of Layers: " + dp.getMapLayers());
+	}
+	
+	public void subLayerFromMap(){
+		if(dp.getMapLayers() - 1 >= 1) dp.changeNumLayers(dp.getMapLayers() - 1);
+		layerLabel.setText("Number of Layers: " + dp.getMapLayers());
+	}
+	
 	
 	public void switchBrush(){
 		dp.changeBrushMode();
@@ -282,16 +354,19 @@ public class MasterFrame extends JFrame{
 				
 				int width = y.readInt();
 				int height = y.readInt();
+				int layers = y.readInt();
 				
-				System.out.println("width: " + width + " height: " + height);
-				
+				System.out.println("width: " + width + " height: " + height + " layers: " + layers);
+				//TODO: dp.changNumLayers()
 				dp.changeMapSize(width, height);
 				
-				for(int j = 0; j < dp.getMapHeight(); j++){
-					for(int i = 0; i < dp.getMapWidth(); i++){
-						byte readVal = y.readByte();
-						System.out.println("readVal = " + readVal);
-						dp.setTileIDAsByte(i, j, readVal);
+				for(int k = 0; k < dp.getMapLayers(); k++){
+					for(int j = 0; j < dp.getMapHeight(); j++){
+						for(int i = 0; i < dp.getMapWidth(); i++){
+							byte readVal = y.readByte();
+							System.out.println("readVal = " + readVal);
+							dp.setTileIDAsByte(k, i, j, readVal);
+						}
 					}
 				}
 				
@@ -365,8 +440,9 @@ public class MasterFrame extends JFrame{
 				int allocateLength = 0;
 				allocateLength += Integer.SIZE; //width
 				allocateLength += Integer.SIZE; //height
+				allocateLength += Integer.SIZE; //layers
 				
-				allocateLength += (dp.getMapWidth() * dp.getMapHeight());
+				allocateLength += (dp.getMapWidth() * dp.getMapHeight()) * dp.getMapLayers();
 				
 				//length of xmlobjs
 				for(Vector<XMLObj> objVec : xmlObjs){
@@ -382,13 +458,14 @@ public class MasterFrame extends JFrame{
 				
 				bb.putInt(dp.getMapWidth());
 				bb.putInt(dp.getMapHeight());
-				
-				for(int j = 0; j < dp.getMapHeight(); j++){
-					for(int i = 0; i < dp.getMapWidth(); i++){
-						bb.put(dp.getTileIDAsByte(i, j));
+				bb.putInt(dp.getMapLayers());
+				for(int k = 0; k < dp.getMapLayers(); k++){
+					for(int j = 0; j < dp.getMapHeight(); j++){
+						for(int i = 0; i < dp.getMapWidth(); i++){
+							bb.put(dp.getTileIDAsByte(k, i, j));
+						}
 					}
 				}
-				
 				//add xml objs
 				System.out.println("[start VV (size = " + xmlObjs.size() + ")]");
 				bb.putInt(xmlObjs.size());
