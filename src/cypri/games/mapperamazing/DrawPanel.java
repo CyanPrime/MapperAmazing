@@ -84,6 +84,10 @@ public class DrawPanel extends JPanel /*implements MouseListener, MouseMotionLis
 		tiles.add(new ImageIcon(name));
 	}
 	
+	public void addTile(ImageIcon img){
+		tiles.add(img);
+	}
+	
 	public void clearTiles(){
 		tiles.clear();
 	}

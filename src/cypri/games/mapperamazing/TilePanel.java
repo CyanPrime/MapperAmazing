@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -22,7 +24,7 @@ public class TilePanel extends JPanel implements MouseListener{
 	ImageIcon[] cursor;
 	private int[] tileSizeToCursor = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 0,
 									     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1};
-	private int tileSize = 32;
+	private int tileSize = 16;
 	private int tileLineWidth = 8;
 	private int tileChoice = -1;
 	private int mouseTileX = 0;
@@ -113,6 +115,41 @@ public class TilePanel extends JPanel implements MouseListener{
 			parent.dp.addTile(folder.getAbsolutePath() + "/" + name);
 		}
 		
+		repaint();
+		revalidate();
+		
+		parent.dp.revalidate();
+		parent.dp.repaint();
+	}
+	
+	public void loadSheet(File file){
+		parent.dp.clearTiles();
+		//Vector<String> tempImgs = new Vector<ImageIcon>();
+		BufferedImage bufferedImage = null;
+		try {
+			bufferedImage = ImageIO.read(file);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if(bufferedImage != null){
+			int sheetWidth = bufferedImage.getWidth();
+			int sheetHeight = bufferedImage.getHeight();
+			
+			int numTilesX = sheetWidth/tileSize;
+			int numTilesY = sheetHeight/tileSize;
+			imgs = new ImageIcon[numTilesX * numTilesY];
+			
+			int imgNum = 0;
+			for(int y = 0; y < numTilesY; y++){
+				for(int x = 0; x < numTilesX; x++){
+					imgs[imgNum] = new ImageIcon(bufferedImage.getSubimage(x * tileSize, y * tileSize, tileSize, tileSize));
+					parent.dp.addTile(imgs[imgNum]);
+					imgNum++;
+				}
+			}
+		}
 		repaint();
 		revalidate();
 		

@@ -44,6 +44,7 @@ public class MasterFrame extends JFrame{
 	
 	JFileChooser fc;
 	JButton loadTilesBtn = new JButton("Load Tiles"); 
+	JButton loadSheetBtn = new JButton("Load Sheet"); 
 	JButton changeSizeBtn = new JButton("Change Map Size");
 	JButton saveBtn = new JButton("Save Map");
 	JButton loadBtn = new JButton("Load Map");
@@ -251,6 +252,23 @@ public class MasterFrame extends JFrame{
 		    }
 		});*/
 		
+		loadSheetBtn.setBounds(890, 40, 100, 20);
+		loadSheetBtn.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				int fcVal = fc.showOpenDialog(myMA.mf);
+				
+				if(fcVal == JFileChooser.APPROVE_OPTION) 
+		       	{
+					//"null";
+					//	/*if(file.isDirectory())*/ fileName = 
+					//else file.getAbsolutePath();
+					tilePanel.loadSheet(fc.getSelectedFile());
+		       	}
+		    }
+		});
+		
 		content = getContentPane();	
 		setVisible(true);
 
@@ -260,6 +278,7 @@ public class MasterFrame extends JFrame{
 		content.add(changeSizeBtn);
 		content.add(saveBtn);
 		content.add(loadBtn);
+		content.add(loadSheetBtn);
 		
 		content.add(undoBtn);
 		content.add(redoBtn);
