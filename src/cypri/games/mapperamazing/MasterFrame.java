@@ -24,6 +24,9 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
@@ -85,6 +88,8 @@ public class MasterFrame extends JFrame{
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
+		this.setJMenuBar(getMenuBar(this.getJMenuBar()));
+		
 		jsp.setBounds(10, 80, 640, 480);
 		
 		jsp.addMouseListener(new MouseListener()
@@ -128,73 +133,7 @@ public class MasterFrame extends JFrame{
 		
 		tilePanel.setBounds(750, 80, 256, 480);
 		
-		loadTilesBtn.setBounds(10, 10, 100, 20);
-		loadTilesBtn.addActionListener(new ActionListener(){
-			@Override
-		    public void actionPerformed (ActionEvent event) {
-				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				int fcVal = fc.showOpenDialog(myMA.mf);
-				
-				if(fcVal == JFileChooser.APPROVE_OPTION) 
-		       	{
-					//"null";
-					//	/*if(file.isDirectory())*/ fileName = 
-					//else file.getAbsolutePath();
-					tilePanel.loadTiles(fc.getSelectedFile());
-		       	}
-		    }
-		});
-		
-		changeSizeBtn.setBounds(150, 10, 200, 20);
-		changeSizeBtn.addActionListener(new ActionListener(){
-			@Override
-		    public void actionPerformed (ActionEvent event) {
-				showMapSizeChangeDialog();
-		    }
-		});
-		
-
-		saveBtn.setBounds(400, 10, 100, 20);
-		saveBtn.addActionListener(new ActionListener(){
-			@Override
-		    public void actionPerformed (ActionEvent event) {
-				if(save())
-		    		JOptionPane.showMessageDialog(null, "File saved!", "Save Dialog",  JOptionPane.INFORMATION_MESSAGE);
-		    		
-		    	else
-		    		JOptionPane.showMessageDialog(null, "File not saved!", "Error!",  JOptionPane.ERROR_MESSAGE);
-		    }
-		});
-		
-		loadBtn.setBounds(550, 10, 100, 20);
-		loadBtn.addActionListener(new ActionListener(){
-			@Override
-		    public void actionPerformed (ActionEvent event) {
-				if(load())
-		    		JOptionPane.showMessageDialog(null, "File loaded!", "Load Dialog",  JOptionPane.INFORMATION_MESSAGE);
-		    		
-		    	else
-		    		JOptionPane.showMessageDialog(null, "File not loaded!", "Error!",  JOptionPane.ERROR_MESSAGE);
-		    }
-		});
-		
-		undoBtn.setBounds(700, 10, 100, 20);
-		undoBtn.addActionListener(new ActionListener(){
-			@Override
-		    public void actionPerformed (ActionEvent event) {
-				undo();
-		    }
-		});
-		
-		redoBtn.setBounds(850, 10, 100, 20);
-		redoBtn.addActionListener(new ActionListener(){
-			@Override
-		    public void actionPerformed (ActionEvent event) {
-				redo();
-		    }
-		});
-		
-		brushBtn.setBounds(10, 40, 100, 20);
+		brushBtn.setBounds(10, 10, 100, 20);
 		brushBtn.addActionListener(new ActionListener(){
 			@Override
 		    public void actionPerformed (ActionEvent event) {
@@ -202,28 +141,11 @@ public class MasterFrame extends JFrame{
 		    }
 		});
 		
-		brushLabel.setBounds(120, 40, 100, 20);
-		
-		addLayerBtn.setBounds(200, 40, 100, 20);
-		addLayerBtn.addActionListener(new ActionListener(){
-			@Override
-		    public void actionPerformed (ActionEvent event) {
-				addLayerToMap();
-		    }
-		});
-		
-		subLayerBtn.setBounds(310, 40, 100, 20);
-		subLayerBtn.addActionListener(new ActionListener(){
-			@Override
-		    public void actionPerformed (ActionEvent event) {
-				subLayerFromMap();
-		    }
-		});
+		brushLabel.setBounds(120, 10, 100, 20);
 		
 		
-		layerLabel.setBounds(430, 40, 150, 20);
 		
-		upLayerBtn.setBounds(550, 40, 100, 20);
+		upLayerBtn.setBounds(10, 40, 100, 20);
 		upLayerBtn.addActionListener(new ActionListener(){
 			@Override
 		    public void actionPerformed (ActionEvent event) {
@@ -231,7 +153,7 @@ public class MasterFrame extends JFrame{
 		    }
 		});
 		
-		downLayerBtn.setBounds(660, 40, 100, 20);
+		downLayerBtn.setBounds(115, 40, 100, 20);
 		downLayerBtn.addActionListener(new ActionListener(){
 			@Override
 		    public void actionPerformed (ActionEvent event) {
@@ -239,35 +161,8 @@ public class MasterFrame extends JFrame{
 		    }
 		});
 		
-		curLayerLabel.setBounds(770, 40, 150, 20);
-		/*compBtn.setBounds(800, 40, 150, 20);
-		compBtn.addActionListener(new ActionListener(){
-			@Override
-		    public void actionPerformed (ActionEvent event) {
-				if(loadPanel())
-		    		JOptionPane.showMessageDialog(null, "Frame Loaded!", "Frame Dialog",  JOptionPane.INFORMATION_MESSAGE);
-		    		
-		    	else
-		    		JOptionPane.showMessageDialog(null, "Frame not loaded!", "Error!",  JOptionPane.ERROR_MESSAGE);
-		    }
-		});*/
-		
-		loadSheetBtn.setBounds(890, 40, 100, 20);
-		loadSheetBtn.addActionListener(new ActionListener(){
-			@Override
-		    public void actionPerformed (ActionEvent event) {
-				fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-				int fcVal = fc.showOpenDialog(myMA.mf);
-				
-				if(fcVal == JFileChooser.APPROVE_OPTION) 
-		       	{
-					//"null";
-					//	/*if(file.isDirectory())*/ fileName = 
-					//else file.getAbsolutePath();
-					tilePanel.loadSheet(fc.getSelectedFile());
-		       	}
-		    }
-		});
+		layerLabel.setBounds(220, 30, 150, 20);
+		curLayerLabel.setBounds(220, 45, 150, 20);
 		
 		content = getContentPane();	
 		setVisible(true);
@@ -294,6 +189,142 @@ public class MasterFrame extends JFrame{
 		content.add(curLayerLabel);
 		
 		loadPanel();
+	}
+	
+	public JMenuBar getMenuBar(JMenuBar temp){
+		temp = new JMenuBar();
+		temp.add(getFileMenu());
+		temp.add(getEditMenu());
+		temp.add(getLayersMenu());
+		
+		return temp;
+	}
+	
+	public JMenu getFileMenu(){
+		JMenu temp = new JMenu("File");
+		JMenuItem menuLoadTiles = new JMenuItem("Load Tiles");
+		menuLoadTiles.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				int fcVal = fc.showOpenDialog(myMA.mf);
+				
+				if(fcVal == JFileChooser.APPROVE_OPTION) 
+		       	{
+					//"null";
+					//	/*if(file.isDirectory())*/ fileName = 
+					//else file.getAbsolutePath();
+					tilePanel.loadTiles(fc.getSelectedFile());
+		       	}
+		    }
+		});
+		temp.add(menuLoadTiles);
+		
+		JMenuItem menuLoadSheet = new JMenuItem("Load Sheet");
+		menuLoadSheet.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				int fcVal = fc.showOpenDialog(myMA.mf);
+				
+				if(fcVal == JFileChooser.APPROVE_OPTION) 
+		       	{
+					//"null";
+					//	/*if(file.isDirectory())*/ fileName = 
+					//else file.getAbsolutePath();
+					tilePanel.loadSheet(fc.getSelectedFile());
+		       	}
+		    }
+		});
+		temp.add(menuLoadSheet);
+
+		temp.addSeparator();
+		
+		JMenuItem menuSaveMap = new JMenuItem("Save Map");
+		menuSaveMap.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				if(save())
+		    		JOptionPane.showMessageDialog(null, "File saved!", "Save Dialog",  JOptionPane.INFORMATION_MESSAGE);
+		    		
+		    	else
+		    		JOptionPane.showMessageDialog(null, "File not saved!", "Error!",  JOptionPane.ERROR_MESSAGE);
+		    }
+		});
+		temp.add(menuSaveMap);
+		
+		JMenuItem menuLoadMap = new JMenuItem("Load Map");
+		menuLoadMap.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				if(load())
+		    		JOptionPane.showMessageDialog(null, "File loaded!", "Load Dialog",  JOptionPane.INFORMATION_MESSAGE);
+		    		
+		    	else
+		    		JOptionPane.showMessageDialog(null, "File not loaded!", "Error!",  JOptionPane.ERROR_MESSAGE);
+		    }
+		});
+		temp.add(menuLoadMap);
+		
+		return temp;
+	}
+	
+	public JMenu getEditMenu(){
+		JMenu temp = new JMenu("Edit");
+		JMenuItem menuChangeMapSize = new JMenuItem("Change Map Size");
+		menuChangeMapSize.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				showMapSizeChangeDialog();
+		    }
+		});
+		temp.add(menuChangeMapSize);
+		
+		temp.addSeparator();
+		
+		JMenuItem menuUndo = new JMenuItem("Undo");
+		menuUndo.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				undo();
+		    }
+		});
+		temp.add(menuUndo);
+		
+		JMenuItem menuRedo = new JMenuItem("Redo");
+		menuRedo.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				redo();
+		    }
+		});
+		temp.add(menuRedo);
+		
+		return temp;
+	}
+	
+	public JMenu getLayersMenu(){
+		JMenu temp = new JMenu("Layers");
+		
+		JMenuItem menuAddLayer = new JMenuItem("Add Layer");
+		menuAddLayer.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				addLayerToMap();
+		    }
+		});
+		temp.add(menuAddLayer);
+		
+		JMenuItem menuSubLayer = new JMenuItem("Subtract Layer");
+		menuSubLayer.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				subLayerFromMap();
+		    }
+		});
+		temp.add(menuSubLayer);
+		
+		return temp;
 	}
 	
 	public Container getContent(){

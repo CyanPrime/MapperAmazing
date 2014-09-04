@@ -24,7 +24,7 @@ public class TilePanel extends JPanel implements MouseListener{
 	ImageIcon[] cursor;
 	private int[] tileSizeToCursor = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 0,
 									     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1};
-	private int tileSize = 16;
+	private int tileSize = 32;
 	private int tileLineWidth = 8;
 	private int tileChoice = -1;
 	private int mouseTileX = 0;
