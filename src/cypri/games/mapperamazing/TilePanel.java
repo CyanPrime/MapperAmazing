@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 public class TilePanel extends JPanel implements MouseListener{
 	private MasterFrame parent;
 	ImageIcon[] imgs;
+	int[] tileInfo;
 	ImageIcon[] cursor;
 	private int[] tileSizeToCursor = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 0,
 									     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1};
@@ -30,10 +31,13 @@ public class TilePanel extends JPanel implements MouseListener{
 	private int mouseTileX = 0;
 	private int mouseTileY = 0;
 	
+	private boolean infoMode = false;
+	
 	public TilePanel(MasterFrame parent){
 		super();
 		this.parent = parent;
 		imgs = new ImageIcon[0];
+		tileInfo = new int[0];
 		addMouseListener(this);
 		cursor = new ImageIcon[] {new ImageIcon("imgs/cursor/cursor16.png"), new ImageIcon("imgs/cursor/cursor32.png")};
 	}
@@ -60,6 +64,10 @@ public class TilePanel extends JPanel implements MouseListener{
         	
         	if(img != null){     
         		img.paintIcon(this, g, tempWidth * tileSize, tempHeight * tileSize);
+        		if(infoMode){
+        			g.setColor(Color.WHITE);
+        			g.drawString("t: " + tileInfo[i], tempWidth * tileSize, tempHeight * tileSize + 10);
+        		}
         	}
         }
         
@@ -75,6 +83,28 @@ public class TilePanel extends JPanel implements MouseListener{
 	
 	public int getTileSize(){
 		return tileSize;
+	}
+	
+	public void toggleInfoMode(){
+		infoMode = !infoMode;
+		repaint();
+		revalidate();
+		
+		parent.dp.revalidate();
+		parent.dp.repaint();
+	}
+	
+	public boolean getinfoMode(){
+		return infoMode;
+	}
+	
+	public int[] getTileInfo(){
+		return tileInfo;
+	}
+	
+	public void setUpTileInfo(){
+		tileInfo = new int[imgs.length];
+		for(int i = 0; i < tileInfo.length; i++) tileInfo[i] = 0;
 	}
 	
 	public void loadTiles(File folder){
@@ -115,6 +145,8 @@ public class TilePanel extends JPanel implements MouseListener{
 			parent.dp.addTile(folder.getAbsolutePath() + "/" + name);
 		}
 		
+		setUpTileInfo();
+		
 		repaint();
 		revalidate();
 		
@@ -150,6 +182,9 @@ public class TilePanel extends JPanel implements MouseListener{
 				}
 			}
 		}
+		
+		setUpTileInfo();
+		
 		repaint();
 		revalidate();
 		
@@ -240,33 +275,64 @@ public class TilePanel extends JPanel implements MouseListener{
 
 	@Override
 	public void mouseReleased(MouseEvent me) {
+		if(!infoMode){
+			System.out.println("testing...");
+			
+			boolean zeroCoords = false;
+			
+			int mouseX = me.getX();
+			int mouseY = me.getY();
+			
+			if(mouseX == 0 && mouseY == 0) zeroCoords = true;
+			
+			if(mouseX > 0) mouseX = mouseX/tileSize;
+			else mouseX = 0;
+			
+			if(mouseY > 0) mouseY = mouseY/tileSize;
+			else mouseY = 0;
+			
+			mouseTileX = mouseX;
+			mouseTileY = mouseY;
+			
+			tileChoice = (mouseY * tileLineWidth) + mouseX;
+			
+			System.out.println("x: " + mouseX + " y: " + mouseY + " tileChoice: " + tileChoice);
+			
+			if((tileChoice > imgs.length) || zeroCoords) tileChoice = -1;
+			else parent.activeBrush = -1;
+			
+			repaint();
+			revalidate();
+		}
 		
-		System.out.println("testing...");
-		
-		boolean zeroCoords = false;
-		
-		int mouseX = me.getX();
-		int mouseY = me.getY();
-		
-		if(mouseX == 0 && mouseY == 0) zeroCoords = true;
-		
-		if(mouseX > 0) mouseX = mouseX/tileSize;
-		else mouseX = 0;
-		
-		if(mouseY > 0) mouseY = mouseY/tileSize;
-		else mouseY = 0;
-		
-		mouseTileX = mouseX;
-		mouseTileY = mouseY;
-		
-		tileChoice = (mouseY * tileLineWidth) + mouseX;
-		
-		System.out.println("x: " + mouseX + " y: " + mouseY + " tileChoice: " + tileChoice);
-		
-		if((tileChoice > imgs.length) || zeroCoords) tileChoice = -1;
-		else parent.activeBrush = -1;
-		
-		repaint();
-		revalidate();
+		else{
+			System.out.println("testing...");
+			
+			boolean zeroCoords = false;
+			
+			int mouseX = me.getX();
+			int mouseY = me.getY();
+			
+			if(mouseX == 0 && mouseY == 0) zeroCoords = true;
+			
+			if(mouseX > 0) mouseX = mouseX/tileSize;
+			else mouseX = 0;
+			
+			if(mouseY > 0) mouseY = mouseY/tileSize;
+			else mouseY = 0;
+			
+			mouseTileX = mouseX;
+			mouseTileY = mouseY;
+			
+			tileChoice = (mouseY * tileLineWidth) + mouseX;
+			
+			System.out.println("INFO -- x: " + mouseX + " y: " + mouseY + " tileChoice: " + tileChoice);
+			
+			if((tileChoice > imgs.length) || zeroCoords){}
+			else tileInfo[tileChoice] = parent.activeInfoNum;
+			
+			repaint();
+			revalidate();
+		}
 	}
 }

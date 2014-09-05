@@ -54,6 +54,11 @@ public class MasterFrame extends JFrame{
 	JButton undoBtn = new JButton("Undo");
 	JButton redoBtn = new JButton("Redo");
 	JButton brushBtn = new JButton("brush/fill");
+	
+	JButton addInfoBtn = new JButton("+");
+	JButton subInfoBtn = new JButton("-");
+	
+	JButton infoModeBtn = new JButton("Selection Mode");
 	//JButton compBtn = new JButton("Load Frame");
 	JLabel brushLabel = new JLabel("Brush Mode");
 	
@@ -63,15 +68,17 @@ public class MasterFrame extends JFrame{
 	JButton downLayerBtn = new JButton("Layer--");
 	JLabel layerLabel = new JLabel("Number of Layers: " + 1);
 	JLabel curLayerLabel = new JLabel("Current Layer: " + 1);
+	JLabel curInfoNumLabel = new JLabel("Type: " + 0);
 	
 	JScrollPane jsp = new JScrollPane(dp, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 	
 	public int activeBrush = -1;
+	public int activeInfoNum = 0;
 	
 	private Container content;
 	
 	public MasterFrame(MapperAmazing ma){
-		super("Mapper Amazing v1.0.2.0 - by William Starkovich");
+		super("Mapper Amazing v1.0.3.0 - by William Starkovich");
 		
 		String workingdir = System.getProperty("user.dir");
 		fc = new JFileChooser(new File(workingdir));
@@ -164,29 +171,58 @@ public class MasterFrame extends JFrame{
 		layerLabel.setBounds(220, 30, 150, 20);
 		curLayerLabel.setBounds(220, 45, 150, 20);
 		
+		infoModeBtn.setBounds(400, 10, 160, 20);
+		infoModeBtn.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				toggleInfoMode();
+		    }
+		});
+		
+		curInfoNumLabel.setBounds(400, 40, 150, 20);
+		
+		addInfoBtn.setBounds(450, 40, 50, 20);
+		addInfoBtn.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				AddInfoType();
+		    }
+		});
+		
+		subInfoBtn.setBounds(510, 40, 50, 20);
+		subInfoBtn.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				SubInfoType();
+		    }
+		});
+		
 		content = getContentPane();	
 		setVisible(true);
 
 		content.add(jsp);
 		content.add(tilePanel);
-		content.add(loadTilesBtn);
-		content.add(changeSizeBtn);
-		content.add(saveBtn);
-		content.add(loadBtn);
-		content.add(loadSheetBtn);
+		//content.add(loadTilesBtn);
+		//content.add(changeSizeBtn);
+		//content.add(saveBtn);
+		//content.add(loadBtn);
+		//content.add(loadSheetBtn);
 		
-		content.add(undoBtn);
-		content.add(redoBtn);
+		//content.add(undoBtn);
+		//content.add(redoBtn);
 		content.add(brushBtn);
-		content.add(addLayerBtn);
-		content.add(subLayerBtn);
+		//content.add(addLayerBtn);
+		//content.add(subLayerBtn);
 		content.add(upLayerBtn);
 		content.add(downLayerBtn);
-		
+		content.add(addInfoBtn);
+		content.add(subInfoBtn);
+		content.add(infoModeBtn);
 		//content.add(compBtn);
 		content.add(brushLabel);
 		content.add(layerLabel);
 		content.add(curLayerLabel);
+		content.add(curInfoNumLabel);
 		
 		loadPanel();
 	}
@@ -245,10 +281,10 @@ public class MasterFrame extends JFrame{
 			@Override
 		    public void actionPerformed (ActionEvent event) {
 				if(save())
-		    		JOptionPane.showMessageDialog(null, "File saved!", "Save Dialog",  JOptionPane.INFORMATION_MESSAGE);
+		    		JOptionPane.showMessageDialog(null, "Map saved!", "Save Dialog",  JOptionPane.INFORMATION_MESSAGE);
 		    		
 		    	else
-		    		JOptionPane.showMessageDialog(null, "File not saved!", "Error!",  JOptionPane.ERROR_MESSAGE);
+		    		JOptionPane.showMessageDialog(null, "Map not saved!", "Error!",  JOptionPane.ERROR_MESSAGE);
 		    }
 		});
 		temp.add(menuSaveMap);
@@ -258,13 +294,28 @@ public class MasterFrame extends JFrame{
 			@Override
 		    public void actionPerformed (ActionEvent event) {
 				if(load())
-		    		JOptionPane.showMessageDialog(null, "File loaded!", "Load Dialog",  JOptionPane.INFORMATION_MESSAGE);
+		    		JOptionPane.showMessageDialog(null, "Map loaded!", "Load Dialog",  JOptionPane.INFORMATION_MESSAGE);
 		    		
 		    	else
-		    		JOptionPane.showMessageDialog(null, "File not loaded!", "Error!",  JOptionPane.ERROR_MESSAGE);
+		    		JOptionPane.showMessageDialog(null, "Map not loaded!", "Error!",  JOptionPane.ERROR_MESSAGE);
 		    }
 		});
 		temp.add(menuLoadMap);
+		
+		temp.addSeparator();
+		
+		JMenuItem menuSavetileInfo = new JMenuItem("Save Tile Info");
+		menuSavetileInfo.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				if(saveTileInfo())
+		    		JOptionPane.showMessageDialog(null, "Tile Info saved!", "Save Dialog",  JOptionPane.INFORMATION_MESSAGE);
+		    		
+		    	else
+		    		JOptionPane.showMessageDialog(null, "Tile Info not saved!", "Error!",  JOptionPane.ERROR_MESSAGE);
+		    }
+		});
+		temp.add(menuSavetileInfo);
 		
 		return temp;
 	}
@@ -370,6 +421,23 @@ public class MasterFrame extends JFrame{
 		jsp.repaint();
 	}
 
+	public void AddInfoType(){
+		activeInfoNum++;
+		curInfoNumLabel.setText("Type: " + activeInfoNum);
+	}
+	
+	public void SubInfoType(){
+		activeInfoNum--;
+		curInfoNumLabel.setText("Type: " + activeInfoNum);
+	}
+	
+	public void toggleInfoMode(){
+		tilePanel.toggleInfoMode();
+		
+		if(tilePanel.getinfoMode()) infoModeBtn.setText("Info Mode");
+		else infoModeBtn.setText("Selection Mode");
+	}
+	
 	public void dpMouseMoved(int x, int y){
 		dp.mouseMoved(x,y);
 		jsp.repaint();
@@ -537,6 +605,65 @@ public class MasterFrame extends JFrame{
 					}
 					
 					System.out.println("[end vec]");
+				}
+				
+				bb.flip();
+				
+				x.write(bb.array());
+				
+			    return true; 
+	       	}
+		}
+		
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File Not Found");
+			return false;
+		}
+		
+		catch(IOException e)
+		{
+			System.out.println("IO Exception");
+			return false;
+		}
+		
+		catch(Exception e)
+		{
+			System.out.println("Exception");
+			e.getCause();
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "" + e.getMessage() , "Error!",  JOptionPane.ERROR_MESSAGE);
+
+			return false;
+		}
+				
+		return false;
+	}
+	
+	public boolean saveTileInfo(){
+		try{
+			fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			int returnVal = fc.showOpenDialog(this);
+
+	        if(returnVal == JFileChooser.APPROVE_OPTION) {
+	            File file = fc.getSelectedFile();
+				FileOutputStream x = new FileOutputStream(file.getAbsolutePath());
+				
+				int allocateLength = 0;
+				allocateLength += Integer.SIZE; //Length
+				int[] tileInfo = tilePanel.getTileInfo();
+				allocateLength += (tileInfo.length * Integer.SIZE);
+				
+				
+				System.out.println("Length: " + tileInfo.length);
+				
+				ByteBuffer  bb = ByteBuffer.allocate(allocateLength); 
+				bb.order(ByteOrder.BIG_ENDIAN); 
+				
+				bb.putInt(tileInfo.length);
+				
+				for(int i = 0; i < tileInfo.length; i++){
+					bb.putInt(tileInfo[i]);
 				}
 				
 				bb.flip();
