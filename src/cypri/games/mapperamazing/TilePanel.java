@@ -85,6 +85,16 @@ public class TilePanel extends JPanel implements MouseListener{
 		return tileSize;
 	}
 	
+	public void setTileSize(int i){
+		tileSize = i;
+		
+		repaint();
+		revalidate();
+		
+		parent.dp.revalidate();
+		parent.dp.repaint();
+	}
+	
 	public void toggleInfoMode(){
 		infoMode = !infoMode;
 		repaint();

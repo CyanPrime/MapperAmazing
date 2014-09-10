@@ -66,6 +66,10 @@ public class MasterFrame extends JFrame{
 	JButton subLayerBtn = new JButton("Sub Layer");
 	JButton upLayerBtn = new JButton("Layer++");
 	JButton downLayerBtn = new JButton("Layer--");
+	
+	JButton toggleTileSizeBtn = new JButton("Tile Size: 32px");
+	
+	
 	JLabel layerLabel = new JLabel("Number of Layers: " + 1);
 	JLabel curLayerLabel = new JLabel("Current Layer: " + 1);
 	JLabel curInfoNumLabel = new JLabel("Type: " + 0);
@@ -197,6 +201,14 @@ public class MasterFrame extends JFrame{
 		    }
 		});
 		
+		toggleTileSizeBtn.setBounds(700, 10, 150, 20);
+		toggleTileSizeBtn.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				toggleTileSize();
+		    }
+		});
+		
 		content = getContentPane();	
 		setVisible(true);
 
@@ -218,6 +230,7 @@ public class MasterFrame extends JFrame{
 		content.add(addInfoBtn);
 		content.add(subInfoBtn);
 		content.add(infoModeBtn);
+		content.add(toggleTileSizeBtn);
 		//content.add(compBtn);
 		content.add(brushLabel);
 		content.add(layerLabel);
@@ -436,6 +449,13 @@ public class MasterFrame extends JFrame{
 		
 		if(tilePanel.getinfoMode()) infoModeBtn.setText("Info Mode");
 		else infoModeBtn.setText("Selection Mode");
+	}
+	
+	public void toggleTileSize(){
+		if(tilePanel.getTileSize() == 32) tilePanel.setTileSize(16);
+		else tilePanel.setTileSize(32);
+		
+		toggleTileSizeBtn.setText("Tile Size: " + tilePanel.getTileSize() + "px");
 	}
 	
 	public void dpMouseMoved(int x, int y){
