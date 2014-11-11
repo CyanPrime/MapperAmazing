@@ -82,7 +82,7 @@ public class MasterFrame extends JFrame{
 	private Container content;
 	
 	public MasterFrame(MapperAmazing ma){
-		super("Mapper Amazing v1.0.3.0 - by William Starkovich");
+		super("Mapper Amazing v1.0.3.1 - by William Starkovich");
 		
 		String workingdir = System.getProperty("user.dir");
 		fc = new JFileChooser(new File(workingdir));
@@ -501,9 +501,9 @@ public class MasterFrame extends JFrame{
 				for(int k = 0; k < dp.getMapLayers(); k++){
 					for(int j = 0; j < dp.getMapHeight(); j++){
 						for(int i = 0; i < dp.getMapWidth(); i++){
-							byte readVal = y.readByte();
+							int readVal = y.readInt();
 							System.out.println("readVal = " + readVal);
-							dp.setTileIDAsByte(k, i, j, readVal);
+							dp.setTileID(k, i, j, readVal);
 						}
 					}
 				}
@@ -580,7 +580,7 @@ public class MasterFrame extends JFrame{
 				allocateLength += Integer.SIZE; //height
 				allocateLength += Integer.SIZE; //layers
 				
-				allocateLength += (dp.getMapWidth() * dp.getMapHeight()) * dp.getMapLayers();
+				allocateLength += ((dp.getMapWidth() * dp.getMapHeight()) * dp.getMapLayers()) * Integer.SIZE;
 				
 				//length of xmlobjs
 				for(Vector<XMLObj> objVec : xmlObjs){
@@ -600,7 +600,7 @@ public class MasterFrame extends JFrame{
 				for(int k = 0; k < dp.getMapLayers(); k++){
 					for(int j = 0; j < dp.getMapHeight(); j++){
 						for(int i = 0; i < dp.getMapWidth(); i++){
-							bb.put(dp.getTileIDAsByte(k, i, j));
+							bb.putInt(dp.getTileID(k, i, j));
 						}
 					}
 				}

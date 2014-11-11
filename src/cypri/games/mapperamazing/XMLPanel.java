@@ -115,14 +115,15 @@ public class XMLPanel{
 		tempObj.vars.add(Integer.valueOf(x));
 		tempObj.vars.add(Integer.valueOf(y));
 		
-		for(XMLComponent c : xmlComps){
+		for(int i = 0; i < xmlComps.size(); i++){
+			XMLComponent c = xmlComps.get(i);
 			if(c.type == 0){
-				int value = 0;
+				int value = Integer.parseInt(((JTextField) jComps.get(i)).getText());
 				tempObj.vars.add(Integer.valueOf(value));
 			}
 			
 			else if (c.type == 1){
-				int value = 0;
+				int value = ((JCheckBox) jComps.get(i)).isSelected() ? 1 : 0;
 				tempObj.vars.add(Integer.valueOf(value));
 			}
 		}

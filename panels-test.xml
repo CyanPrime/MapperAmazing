@@ -1,23 +1,23 @@
 <panels>
 	<panel>
-		<name>Enemies</name>
+		<name>Test 1</name>
 		<component>
-			<name>Type</name>
+			<name>TestComponant</name>
 			<type>0</type>
 		</component>
 	</panel>
 	<panel>
-		<name>Exits</name>
+		<name>Test 2</name>
 		<component>
-			<name>ID</name>
+			<name>TestComponant2</name>
+			<type>1</type>
+		</component>
+		<component>
+			<name>TestComponant</name>
 			<type>0</type>
 		</component>
 		<component>
-			<name>Linked Map ID</name>
-			<type>0</type>
-		</component>
-		<component>
-			<name>Linked Exit ID</name>
+			<name>TestComponant</name>
 			<type>0</type>
 		</component>
 	</panel>

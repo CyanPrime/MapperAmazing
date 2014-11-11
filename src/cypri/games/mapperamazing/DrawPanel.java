@@ -392,4 +392,12 @@ public class DrawPanel extends JPanel /*implements MouseListener, MouseMotionLis
 	public void mouseMoved(int x, int y) {
 		if(mouseButtonDown) drawTiles(currentLayer - 1, x, y);
 	}
+
+	public int getTileID(int layer, int x, int y) {
+		return (tileID[layer][x][y]);
+	}
+
+	public void setTileID(int layer, int x, int y, int id) {
+		tileID[layer][x][y] = id;
+	}
 }
