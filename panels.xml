@@ -1,6 +1,7 @@
 <panels>
 	<panel>
 		<name>Test 1</name>
+		<color>cyan</color>
 		<component>
 			<name>TestComponant</name>
 			<type>0</type>
@@ -8,6 +9,7 @@
 	</panel>
 	<panel>
 		<name>Test 2</name>
+		<color>yellow</color>
 		<component>
 			<name>TestComponant2</name>
 			<type>1</type>

@@ -1,8 +1,10 @@
 package cypri.games.mapperamazing;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -25,6 +27,7 @@ public class XMLPanel{
 	JPanel myPanel;
 	
 	String name;
+	String color;
 	JLabel panelName;
 	
 	@XStreamImplicit(itemFieldName = "component")
@@ -39,11 +42,23 @@ public class XMLPanel{
 	@XStreamOmitField
 	int myNum;
 	
+	@XStreamOmitField
+	Color myColor;
+	
 	public XMLPanel(){}
 	
 	public void setup(MasterFrame parent, int myNum){
 		this.parent = parent;
 		this.myNum = myNum;
+		
+		
+	    try { 
+	    	Field field = Color.class.getField(color);
+	    	myColor = (Color) field.get(null);
+		} catch (Exception e) { e.printStackTrace(); }
+		
+		if(myColor == null) System.out.println("color: " + color);
+		
 		myPanel = new JPanel();
 		
 		panelName = new JLabel(name + "(type: " + myNum + ")");
@@ -111,28 +126,41 @@ public class XMLPanel{
 	}
 	
 	public void onMapCLick(int x, int y){
-		XMLObj tempObj = new XMLObj();
-		tempObj.vars.add(Integer.valueOf(x));
-		tempObj.vars.add(Integer.valueOf(y));
+		if(parent.getDelObjMode()){
+			for(int i = 0; i < parent.xmlObjs.get(myNum).size(); i++){
+				XMLObj temp = parent.xmlObjs.get(myNum).get(i);
+				
+				if(temp.vars.get(0).intValue() == x && temp.vars.get(1).intValue() == y){
+					 parent.xmlObjs.get(myNum).remove(i);
+					 i--;
+				}
+			}
+		}
 		
-		for(int i = 0; i < xmlComps.size(); i++){
-			XMLComponent c = xmlComps.get(i);
-			if(c.type == 0){
-				int value = Integer.parseInt(((JTextField) jComps.get(i)).getText());
-				tempObj.vars.add(Integer.valueOf(value));
+		else{
+			XMLObj tempObj = new XMLObj();
+			tempObj.vars.add(Integer.valueOf(x));
+			tempObj.vars.add(Integer.valueOf(y));
+			
+			for(int i = 0; i < xmlComps.size(); i++){
+				XMLComponent c = xmlComps.get(i);
+				if(c.type == 0){
+					int value = Integer.parseInt(((JTextField) jComps.get(i)).getText());
+					tempObj.vars.add(Integer.valueOf(value));
+				}
+				
+				else if (c.type == 1){
+					int value = ((JCheckBox) jComps.get(i)).isSelected() ? 1 : 0;
+					tempObj.vars.add(Integer.valueOf(value));
+				}
 			}
 			
-			else if (c.type == 1){
-				int value = ((JCheckBox) jComps.get(i)).isSelected() ? 1 : 0;
-				tempObj.vars.add(Integer.valueOf(value));
+			for(Integer i : tempObj.vars){
+				System.out.print(i.intValue() + " ,");
 			}
+			
+			parent.xmlObjs.get(myNum).add(tempObj);
 		}
-		
-		for(Integer i : tempObj.vars){
-			System.out.print(i.intValue() + " ,");
-		}
-		
-		parent.xmlObjs.get(myNum).add(tempObj);
 		System.out.println(" Done.");
 	}
 }

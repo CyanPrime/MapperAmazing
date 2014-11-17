@@ -69,6 +69,7 @@ public class MasterFrame extends JFrame{
 	
 	JButton toggleTileSizeBtn = new JButton("Tile Size: 32px");
 	
+	JButton toggleObjBtn = new JButton("Add Obj");
 	
 	JLabel layerLabel = new JLabel("Number of Layers: " + 1);
 	JLabel curLayerLabel = new JLabel("Current Layer: " + 1);
@@ -78,6 +79,8 @@ public class MasterFrame extends JFrame{
 	
 	public int activeBrush = -1;
 	public int activeInfoNum = 0;
+	
+	boolean delObjMode = false;
 	
 	private Container content;
 	
@@ -201,11 +204,19 @@ public class MasterFrame extends JFrame{
 		    }
 		});
 		
-		toggleTileSizeBtn.setBounds(700, 10, 150, 20);
+		toggleTileSizeBtn.setBounds(600, 10, 150, 20);
 		toggleTileSizeBtn.addActionListener(new ActionListener(){
 			@Override
 		    public void actionPerformed (ActionEvent event) {
 				toggleTileSize();
+		    }
+		});
+		
+		toggleObjBtn.setBounds(760, 10, 150, 20);
+		toggleObjBtn.addActionListener(new ActionListener(){
+			@Override
+		    public void actionPerformed (ActionEvent event) {
+				setDelObjMode(!getDelObjMode());
 		    }
 		});
 		
@@ -231,7 +242,7 @@ public class MasterFrame extends JFrame{
 		content.add(subInfoBtn);
 		content.add(infoModeBtn);
 		content.add(toggleTileSizeBtn);
-		//content.add(compBtn);
+		content.add(toggleObjBtn);
 		content.add(brushLabel);
 		content.add(layerLabel);
 		content.add(curLayerLabel);
@@ -389,6 +400,17 @@ public class MasterFrame extends JFrame{
 		temp.add(menuSubLayer);
 		
 		return temp;
+	}
+	
+	public boolean getDelObjMode(){
+		return delObjMode;
+	}
+	
+	public void setDelObjMode(boolean i){
+		delObjMode = i;
+		
+		if(delObjMode) toggleObjBtn.setText("Del Obj");
+		else  toggleObjBtn.setText("Add Obj");
 	}
 	
 	public Container getContent(){

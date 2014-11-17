@@ -68,6 +68,7 @@ public class DrawPanel extends JPanel /*implements MouseListener, MouseMotionLis
 	        for(int i = 0; i < parent.xmlList.xmlPanels.size(); i++){
 	        	System.out.println("panels side > 0");
 	        	XMLPanel p = parent.xmlList.xmlPanels.get(i);
+	        	if(p.myColor != null) g.setColor(p.myColor);
 	        	for(XMLObj o :  parent.xmlObjs.get(p.myNum)){
 	        		System.out.println("drawing");
 	        		g.fillRect(o.vars.get(0) * tileSize, o.vars.get(1) * tileSize,  tileSize, tileSize);
